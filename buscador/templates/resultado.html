@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Resultado de carga de archivo</title>
+</head>
+<body>
+  {% if exito %}
+    <h1>Archivo cargado exitosamente</h1>
+    <p>El archivo de Excel se ha procesado correctamente.</p>
+
+
+    {{estado}}
+
+
+  {% else %}
+    <h1>Error al cargar el archivo</h1>
+    <p>Hubo un problema al cargar y procesar el archivo de Excel.</p>
+  {% endif %}
+
+  <a href="buscador/descargar-archivo">Descargar archivo</a>
+
+
+  <!-- Puedes agregar más contenido HTML aquí según tus necesidades -->
+
+  <a href="/">Volver a cargar otro archivo</a>
+
+
+</body>
+</html>
