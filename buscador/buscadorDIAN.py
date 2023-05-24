@@ -59,14 +59,17 @@ class buscadorDIAN:
             span_segundo_nombre = self.driver.find_element("id",
                                                            "vistaConsultaEstadoRUT:formConsultaEstadoRUT:otrosNombres")
             span_estado_rut = self.driver.find_element("id", "vistaConsultaEstadoRUT:formConsultaEstadoRUT:estado")
+            span_dv = self.driver.find_element("id", "vistaConsultaEstadoRUT:formConsultaEstadoRUT:dv")
+
 
             pA = span_primer_apellido.text
             sA = span_segundo_apellido.text
             pN = span_primer_nombre.text
             sN = span_segundo_nombre.text
             eR = span_estado_rut.text
+            dV = span_dv.text
 
-            fila = [valor, pA, sA, pN, sN, "", eR]
+            fila = [valor,dV, pA, sA, pN, sN, "", eR]
             self.DATA.append(fila)
 
             #print(pA, sA, pN, sN, eR)
@@ -74,10 +77,13 @@ class buscadorDIAN:
             try:
                 span_razon_zocial_rut = self.driver.find_element("id", "vistaConsultaEstadoRUT:formConsultaEstadoRUT:razonSocial")
                 span_estado_rut_raz = self.driver.find_element("id", "vistaConsultaEstadoRUT:formConsultaEstadoRUT:estado")
+                span_dv_emp = self.driver.find_element("id", "vistaConsultaEstadoRUT:formConsultaEstadoRUT:dv")
 
                 rZ = span_razon_zocial_rut.text
                 eRR = span_estado_rut_raz.text
-                fila = [valor, "", "", "", "",rZ, eRR]
+                dvEm = span_dv_emp.text
+
+                fila = [valor,dvEm, "", "", "", "",rZ, eRR]
                 self.DATA.append(fila)
             except:
                 fila = [valor, "", "", "", "", "", "No Registrado"]
@@ -101,7 +107,7 @@ class buscadorDIAN:
         workbook = Workbook()
         hoja_activa = workbook.active
 
-        encabezados = ['NIT', 'APELLIDO 1', 'APELLIDO 2', 'NOMBRE 1', 'NOMBRE 2', 'RAZON SOCIAL', 'ESTADO']
+        encabezados = ['NIT', 'DV', 'APELLIDO 1', 'APELLIDO 2', 'NOMBRE 1', 'NOMBRE 2', 'RAZON SOCIAL', 'ESTADO']
         hoja_activa.append(encabezados)
         datos = self.DATA
 
