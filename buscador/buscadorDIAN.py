@@ -1,6 +1,8 @@
 import os
 from sys import path
 
+from selenium.webdriver.chrome.options import Options
+
 path.append("../")
 
 import time
@@ -20,10 +22,10 @@ class buscadorDIAN:
 
     def iniciar_navegador(self):
         # Configurar las opciones del controlador de ChromeDriver
-        # chrome_options = Options()
-        # chrome_options.add_argument("--headless")  # Habilitar el modo headless para que se oculte el navegador
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")  # Habilitar el modo headless para que se oculte el navegador
         # Configurar el controlador de ChromeDriver (asegúrate de tenerlo instalado y en el PATH)
-        self.driver = webdriver.Chrome()  # options=chrome_options
+        self.driver = webdriver.Chrome(options=chrome_options)  # options=chrome_options
         # Abrir la página web en el controlador del navegador
         self.driver.get(self.url)
         # Pausa de 2 segundos
@@ -64,14 +66,22 @@ class buscadorDIAN:
             sN = span_segundo_nombre.text
             eR = span_estado_rut.text
 
-            fila = [valor, pA, sA, pN, sN, eR]
+            fila = [valor, pA, sA, pN, sN, "", eR]
             self.DATA.append(fila)
 
             #print(pA, sA, pN, sN, eR)
         except:
-            #print("No existe registro")
-            fila = [valor, "", "", "", "", "No Registrado"]
-            self.DATA.append(fila)
+            try:
+                span_razon_zocial_rut = self.driver.find_element("id", "vistaConsultaEstadoRUT:formConsultaEstadoRUT:razonSocial")
+                span_estado_rut_raz = self.driver.find_element("id", "vistaConsultaEstadoRUT:formConsultaEstadoRUT:estado")
+
+                rZ = span_razon_zocial_rut.text
+                eRR = span_estado_rut_raz.text
+                fila = [valor, "", "", "", "",rZ, eRR]
+                self.DATA.append(fila)
+            except:
+                fila = [valor, "", "", "", "", "", "No Registrado"]
+                self.DATA.append(fila)
 
 
 
@@ -91,7 +101,7 @@ class buscadorDIAN:
         workbook = Workbook()
         hoja_activa = workbook.active
 
-        encabezados = ['NIT', 'APELLIDO 1', 'APELLIDO 2', 'NOMBRE 1', 'NOMBRE 2', 'ESTADO']
+        encabezados = ['NIT', 'APELLIDO 1', 'APELLIDO 2', 'NOMBRE 1', 'NOMBRE 2', 'RAZON SOCIAL', 'ESTADO']
         hoja_activa.append(encabezados)
         datos = self.DATA
 
