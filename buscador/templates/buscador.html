@@ -1,8 +1,28 @@
-<form method="post" enctype="multipart/form-data">
+
+<!doctype html>
+<html lang="en">
+<head>
+    {% load static %}
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Buscador - DIAN</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
+</head>
+<body>
+
+<form method="post" enctype="multipart/form-data" class="my-form">
     {% csrf_token %}
 
     {{ form }}
 
-    <button type="submit">Cargar</button>
+    <button type="submit" class="my-button">Cargar</button>
 </form>
+
+</body>
+</html>
+
+
 

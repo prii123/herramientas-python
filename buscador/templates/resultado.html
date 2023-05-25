@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Resultado de carga de archivo</title>
+  {% load static %}
+  <title>Descargar</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
 </head>
 <body>
   {% if exito %}
@@ -9,7 +11,7 @@
     <p>El archivo de Excel se ha procesado correctamente.</p>
 
 
-    {{estado}}
+    {{nombre_archivo}}
 
 
   {% else %}
@@ -17,12 +19,16 @@
     <p>Hubo un problema al cargar y procesar el archivo de Excel.</p>
   {% endif %}
 
-  <a href="buscador/descargar-archivo">Descargar archivo</a>
+  <br/>
+  <br/>
+  <br/>
+
+  <a href="buscador/descargar-archivo?parametro={{ nombre_archivo }}" class="button">Descargar archivo</a>
 
 
   <!-- Puedes agregar más contenido HTML aquí según tus necesidades -->
 
-  <a href="/">Volver a cargar otro archivo</a>
+  <a href="/" class="button">Volver a cargar otro archivo</a>
 
 
 </body>

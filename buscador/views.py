@@ -6,6 +6,8 @@ from django.shortcuts import render
 from django.template import loader
 from django.views.decorators.csrf import csrf_protect
 from openpyxl import load_workbook
+from django.http import QueryDict
+
 
 from .buscadorDIAN import buscadorDIAN
 from .forms import ExcelForm
@@ -28,15 +30,21 @@ def vista(request):
             for row in sheet.iter_rows(values_only=True):
                 primera_columna.append(row[0])
 
-            print(primera_columna)
-            buscar_dian(primera_columna)
+            querydict = QueryDict(request.POST.urlencode())
+            valor = querydict.get('csrfmiddlewaretoken')
 
+            #print(primera_columna)
+            #buscar_dian(primera_columna,valor)
+
+            buscador = buscadorDIAN(primera_columna, valor)
+            buscador.multiples_busquedas()
+            nombre_retornado = buscador.archivo_excel()
 
 
             context = {
                 'archivo': 'archivo',
                 'exito': True,
-                'estado': "Datos econtrados exitosamente"
+                'nombre_archivo': nombre_retornado
             }
 
             return render(request, 'resultado.html', context)
@@ -47,7 +55,9 @@ def vista(request):
 
 
 def descargar_archivo(request):
-    file_path = os.path.join(os.getcwd().split('buscador')[0] + '\Busqueda.xlsx')
+    param = request.GET.get('parametro')
+    #print(param)
+    file_path = os.path.join(os.getcwd().split('buscador')[0] + '\\archivos\\'+param)
 
     if os.path.exists(file_path):
         with open(file_path, 'rb') as f:
@@ -58,8 +68,8 @@ def descargar_archivo(request):
         return HttpResponse("El archivo no existe.")
 
 
-def buscar_dian(data):
-    buscador = buscadorDIAN(data)
+def buscar_dian(data, nombre_archivo):
+    buscador = buscadorDIAN(data, nombre_archivo)
     buscador.multiples_busquedas()
     buscador.archivo_excel()
 

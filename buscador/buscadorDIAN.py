@@ -8,13 +8,15 @@ path.append("../")
 import time
 from openpyxl import Workbook
 from selenium import webdriver
+import random
 from selenium.webdriver.common.by import By
 
 
 class buscadorDIAN:
-    def __init__(self, valoresBuscados):
+    def __init__(self, valoresBuscados, nombre_archivo):
         self.valoresBuscados = valoresBuscados
         self.DATA = []
+        self.nombre_archivo = nombre_archivo
         self.avance = 0
         self.driver = None
         self.url = "https://muisca.dian.gov.co/WebRutMuisca/DefConsultaEstadoRUT.faces"
@@ -93,11 +95,8 @@ class buscadorDIAN:
 
     def multiples_busquedas(self):
         self.iniciar_navegador()
-
         for nit_busqueda in self.valoresBuscados:
             self.unaBusqueda(nit_busqueda)
-
-
         self.cerrar_navegador()
 
 
@@ -106,12 +105,23 @@ class buscadorDIAN:
     def archivo_excel(self):
         workbook = Workbook()
         hoja_activa = workbook.active
-
         encabezados = ['NIT', 'DV', 'APELLIDO 1', 'APELLIDO 2', 'NOMBRE 1', 'NOMBRE 2', 'RAZON SOCIAL', 'ESTADO']
         hoja_activa.append(encabezados)
         datos = self.DATA
-
         for fila in datos:
             hoja_activa.append(fila)
 
-        workbook.save(self.archivo+'/Busqueda.xlsx')
+        carpeta_delos_archivos = self.archivo+'/archivos/'
+        nombre_del_archivo_generado = self.nombre_archivo
+
+        ruta_archivo = os.path.join(carpeta_delos_archivos, nombre_del_archivo_generado)
+        #if os.path.exists(ruta_archivo):
+        numero_aleatorio = random.randint(1000000, 9999999)
+        workbook.save(ruta_archivo+str(numero_aleatorio)+'.xlsx')
+
+        return nombre_del_archivo_generado+str(numero_aleatorio)+'.xlsx'
+        #else:
+        #    workbook.save(carpeta_delos_archivos+nombre_del_archivo_generado+'.xlsx')
+
+
+
