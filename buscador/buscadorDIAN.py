@@ -9,25 +9,27 @@ import time
 from openpyxl import Workbook
 from selenium import webdriver
 import random
+from .models import Cliente
 from selenium.webdriver.common.by import By
 
 
 class buscadorDIAN:
     def __init__(self, valoresBuscados, nombre_archivo):
         self.valoresBuscados = valoresBuscados
-        self.DATA = []
+        #self.DATA = []
         self.nombre_archivo = nombre_archivo
         self.avance = 0
         self.driver = None
         self.url = "https://muisca.dian.gov.co/WebRutMuisca/DefConsultaEstadoRUT.faces"
         self.archivo = os.getcwd().split('buscador')[0]
+        self.iniciar_navegador()
 
     def iniciar_navegador(self):
         # Configurar las opciones del controlador de ChromeDriver
         chrome_options = Options()
         chrome_options.add_argument("--headless")  # Habilitar el modo headless para que se oculte el navegador
         # Configurar el controlador de ChromeDriver (asegúrate de tenerlo instalado y en el PATH)
-        self.driver = webdriver.Chrome(options=chrome_options)  # options=chrome_options
+        self.driver = webdriver.Chrome()  # options=chrome_options
         # Abrir la página web en el controlador del navegador
         self.driver.get(self.url)
         # Pausa de 2 segundos
@@ -64,6 +66,7 @@ class buscadorDIAN:
             span_dv = self.driver.find_element("id", "vistaConsultaEstadoRUT:formConsultaEstadoRUT:dv")
 
 
+
             pA = span_primer_apellido.text
             sA = span_segundo_apellido.text
             pN = span_primer_nombre.text
@@ -72,9 +75,20 @@ class buscadorDIAN:
             dV = span_dv.text
 
             fila = [valor,dV, pA, sA, pN, sN, "", eR]
-            self.DATA.append(fila)
 
-            #print(pA, sA, pN, sN, eR)
+            cliente = Cliente(
+                nit=valor,
+                dv=dV,
+                apellido1=pA,
+                apellido2=sA,
+                nombre1=pN,
+                nombre2=sN,
+                razon_social='',
+                estado=eR
+            )
+            cliente.save()
+
+            return fila
         except:
             try:
                 span_razon_zocial_rut = self.driver.find_element("id", "vistaConsultaEstadoRUT:formConsultaEstadoRUT:razonSocial")
@@ -86,28 +100,32 @@ class buscadorDIAN:
                 dvEm = span_dv_emp.text
 
                 fila = [valor,dvEm, "", "", "", "",rZ, eRR]
-                self.DATA.append(fila)
+
+
+                cliente = Cliente(
+                    nit=valor,
+                    dv=dvEm,
+                    apellido1='',
+                    apellido2='',
+                    nombre1='',
+                    nombre2='',
+                    razon_social=rZ,
+                    estado=eRR
+                )
+                cliente.save()
+                return fila
             except:
                 fila = [valor, "", "", "", "", "", "No Registrado"]
-                self.DATA.append(fila)
+                return fila
 
 
 
-    def multiples_busquedas(self):
-        self.iniciar_navegador()
-        for nit_busqueda in self.valoresBuscados:
-            self.unaBusqueda(nit_busqueda)
-        self.cerrar_navegador()
-
-
-
-
-    def archivo_excel(self):
+    def archivo_excel(self, datos):
         workbook = Workbook()
         hoja_activa = workbook.active
         encabezados = ['NIT', 'DV', 'APELLIDO 1', 'APELLIDO 2', 'NOMBRE 1', 'NOMBRE 2', 'RAZON SOCIAL', 'ESTADO']
         hoja_activa.append(encabezados)
-        datos = self.DATA
+        #datos = self.DATA
         for fila in datos:
             hoja_activa.append(fila)
 
@@ -120,8 +138,6 @@ class buscadorDIAN:
         workbook.save(ruta_archivo+str(numero_aleatorio)+'.xlsx')
 
         return nombre_del_archivo_generado+str(numero_aleatorio)+'.xlsx'
-        #else:
-        #    workbook.save(carpeta_delos_archivos+nombre_del_archivo_generado+'.xlsx')
 
 
 
