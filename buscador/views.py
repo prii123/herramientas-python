@@ -26,9 +26,16 @@ def vista(request):
             sheet = workbook.active
 
             # Obtiene los valores de la primera columna en una lista
-            primera_columna = []
-            for row in sheet.iter_rows(values_only=True):
-                primera_columna.append(row[0])
+            #primera_columna = []
+            #for row in sheet.iter_rows(values_only=True):
+            #    primera_columna.append(row[0])
+
+            array = []
+            for row in sheet.iter_rows():  # Itera sobre las filas de la hoja de trabajo
+                for cell in row:  # Itera sobre las celdas de cada fila
+                    if cell.value is not None:  # Verifica si la celda no está vacía
+                        array.append(cell.value)
+            print(array)
 
             querydict = QueryDict(request.POST.urlencode())
             valor = querydict.get('csrfmiddlewaretoken')
@@ -36,7 +43,7 @@ def vista(request):
             #print(primera_columna)
             #buscar_dian(primera_columna,valor)
 
-            buscador = buscadorDIAN(primera_columna, valor)
+            buscador = buscadorDIAN(array, valor)
             buscador.multiples_busquedas()
             nombre_retornado = buscador.archivo_excel()
 
