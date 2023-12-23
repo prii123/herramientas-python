@@ -11,6 +11,10 @@ docker run -d -p 4444:4444 -p 7900:7900 --shm-size="2g" selenium/standalone-chro
 # correr imagen scraping
 docker run -p 3000:8000 -d scraping_dian
 
+# ejecutar entorno local
+python -m venv mi_entorno
+
+mi_entorno/Scripts/activate
 
 
 

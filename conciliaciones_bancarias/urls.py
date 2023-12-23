@@ -3,8 +3,9 @@ from . import views
 from .views import MenuView
 
 urlpatterns = [
-    path('x', views.vista, name='home'),
+    path('', views.vista_home, name='home'),
     path('conciliaciones', views.vista_conciliaciones, name='conciliaciones'),
-    path('', MenuView.as_view(), name="menu")
+    path('menu', views.vista_home, name="home"),
+    path('downLoadFileConciliacion/', views.downLoadFileConciliacion, name='downLoadFileConciliacion'),
 
 ]

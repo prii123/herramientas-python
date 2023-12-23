@@ -3,7 +3,8 @@ from sys import path
 
 from selenium.webdriver.chrome.options import Options
 #from webdriver.chrome import ChromeDriverManager
-#from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.chrome import ChromeDriverManager
+
 
 path.append("../")
 
@@ -30,7 +31,7 @@ class buscadorDIAN:
         chrome_options.add_argument("--headless")  # Habilitar el modo headless para que se oculte el navegador
 
         # Configurar el controlador de ChromeDriver (asegúrate de tenerlo instalado y en el PATH)
-        self.driver = webdriver.Chrome()  # options=chrome_options  webdriver.Chrome(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())  # options=chrome_options  webdriver.Chrome(ChromeDriverManager().install())
         # Abrir la página web en el controlador del navegador
         self.driver.get(self.url)
         # Pausa de 2 segundos

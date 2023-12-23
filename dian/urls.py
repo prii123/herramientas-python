@@ -16,13 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from buscador import views
+from conciliaciones_bancarias import views
 from conciliaciones_bancarias import views as conciliacion
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.vista),
+    path('', views.vista_home),
     path('buscador/', include('buscador.urls')),
     #path('herramientas', conciliacion.vista),
-    path('herramientas/', include('conciliaciones_bancarias.urls'))
+    path('', include('conciliaciones_bancarias.urls'))
 ]
