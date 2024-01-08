@@ -3,6 +3,10 @@
 
 {% block conciliaciones %}
 <main class="container">
+    <div class="my-form">
+        <h3>Columnas Necesarias para Operar</h3>
+        <h2>fecha - descripcion - valor - tipo</h2>
+    </div>
     <form  method="post" enctype="multipart/form-data" class="my-form">
         {% csrf_token %}
         {{ form.as_p }}

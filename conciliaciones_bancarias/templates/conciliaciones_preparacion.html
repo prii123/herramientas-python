@@ -1,0 +1,26 @@
+{% include "head.html" %}
+{% include "menu.html"  %}
+
+{% block conciliaciones %}
+<main class="container">
+    <p>{{bancos}}</p>
+    <p>{{contable}}</p>
+   <h1>Parametrizacion de la conciliacion bancaria</h1>
+
+    <h3>generar indetificadores con fecha y valor</h3>
+
+        <form  method="post" class="my-form">
+        {% csrf_token %}
+
+        <input type="radio" id="opcion1" name="opcion" value="1">
+        <label for="opcion1">Generar Identificadores con fecha</label><br>
+
+        <input type="radio" id="opcion2" name="opcion" value="2">
+        <label for="opcion2">Sin Identificadores</label><br>
+
+        <button type="submit" class="my-button">Enviar</button>
+    </form>
+
+
+</main>
+{% endblock %}

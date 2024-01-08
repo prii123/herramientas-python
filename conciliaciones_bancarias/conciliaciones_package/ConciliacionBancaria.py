@@ -1,5 +1,6 @@
 import pandas as pd
-from InformeConciliacionBancaria import InformeConciliacionBancaria
+#from InformeConciliacionBancaria import InformeConciliacionBancaria
+from .InformeConciliacionBancaria import InformeConciliacionBancaria
 
 
 class ConciliacionBancaria:
@@ -322,8 +323,7 @@ class ConciliacionBancaria:
         a.guardar()
 
 
-
-
+"""
 
 obj = ConciliacionBancaria(
     pathArchivoExtracto='extracto_bancario',
@@ -334,6 +334,8 @@ obj.definir_id()
 obj.modular_duplicados()
 obj.conciliacion_bancaria()
 obj.generar_conciliacion()
+
+"""
 
 
 """
