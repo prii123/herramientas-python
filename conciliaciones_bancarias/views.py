@@ -116,6 +116,15 @@ def vista_conciliaciones_preparacion(request):
             concilia.conciliacion_bancaria()
             concilia.generar_conciliacion()
 
+        if int(opcion_seleccionada) == 2:
+            concilia = ConciliacionBancaria(
+                pathArchivoExtracto=dest_bancos, pathArchivoContable=dest_contable,
+                nombreArchivoGenerado=nombre)
+            concilia.sin_definir_id()
+            concilia.modular_duplicados()
+            concilia.conciliacion_bancaria()
+            concilia.generar_conciliacion()
+
         context={"nombre_archivo": nombre+".xlsx"}
 
         return render(request, 'downLoadFileConciliacion.html', context)
@@ -149,7 +158,7 @@ def descargar_archivo(request):
             #f.close()
             #os.remove(param)
             #borrar_archivos()
-            borrar_archivos(nom2)
+            #borrar_archivos(nom2)
             return response
     else:
         return HttpResponse("El archivo no existe.")

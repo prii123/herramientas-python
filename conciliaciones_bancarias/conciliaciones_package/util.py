@@ -4,15 +4,13 @@ import pandas as pd
 from sys import path
 import shutil
 from django.core.files.storage import default_storage
-from datetime import datetime
+import pandas as pd
 
 
 def verificar_columnas(archivo):
     try:
-
         # Se lee el archivo de Excel.
         df = pd.read_excel(archivo)
-
         # Se verifica la cantidad de columnas.
         if len(df.columns) != 4:
           return False, "El archivo debe tener solo 4 columnas  ---- fecha ---- descripcion ---- valor ---- tipo --- "
@@ -27,7 +25,8 @@ def verificar_columnas(archivo):
         for i, fecha in enumerate(df["fecha"]):
             try:
                 # Se intenta convertir la fecha a formato datetime.
-                datetime.strptime(fecha, "%d/%m/%Y")
+                # datetime.strptime(fecha, "%d/%m/%Y")
+                pd.to_datetime(fecha)
             except ValueError:
                 # La fecha no tiene el formato correcto.
                 columnas_incorrectas.append(f"fecha (fila {i + 2})")
@@ -39,7 +38,7 @@ def verificar_columnas(archivo):
         # Se produce una excepción si hay un error al leer el archivo.
         print(f"Error al leer el archivo: {e}")
         #break
-        return False, " - "
+        return False, f"Error al leer el archivo: {e}"
 
     return True, True
 
