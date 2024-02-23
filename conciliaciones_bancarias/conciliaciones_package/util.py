@@ -4,17 +4,44 @@ import pandas as pd
 from sys import path
 import shutil
 from django.core.files.storage import default_storage
+from datetime import datetime
 
 
 def verificar_columnas(archivo):
-    df = pd.read_excel(archivo)
-    return (
-        len(df.columns) == 4
-        and df.columns[0] == "fecha"
-        and df.columns[1] == "descripcion"
-        and df.columns[2] == "valor"
-        and df.columns[3] == "tipo"
-    )
+    try:
+
+        # Se lee el archivo de Excel.
+        df = pd.read_excel(archivo)
+
+        # Se verifica la cantidad de columnas.
+        if len(df.columns) != 4:
+          return False, "El archivo debe tener solo 4 columnas  ---- fecha ---- descripcion ---- valor ---- tipo --- "
+
+        # Se verifica el nombre de las columnas.
+        for i, columna in enumerate(["fecha", "descripcion", "valor", "tipo"]):
+          if df.columns[i] != columna:
+            return False, f"El archivo {archivo} debe tener solo 4 columnas  ---- fecha ---- descripcion ---- valor ---- tipo --- "
+
+        # Se verifica el formato de la columna fecha.
+        columnas_incorrectas = []
+        for i, fecha in enumerate(df["fecha"]):
+            try:
+                # Se intenta convertir la fecha a formato datetime.
+                datetime.strptime(fecha, "%d/%m/%Y")
+            except ValueError:
+                # La fecha no tiene el formato correcto.
+                columnas_incorrectas.append(f"fecha (fila {i + 2})")
+
+        if columnas_incorrectas:
+            return False, f"La columna fecha del archivo {archivo} no tiene el formato DD/MM/AAAA {columnas_incorrectas}"
+
+    except Exception as e:
+        # Se produce una excepción si hay un error al leer el archivo.
+        print(f"Error al leer el archivo: {e}")
+        #break
+        return False, " - "
+
+    return True, True
 
 
 def copiar_archivo(file, carpeta_destino, token):

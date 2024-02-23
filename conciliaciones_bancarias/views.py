@@ -45,6 +45,7 @@ def vista(request):
         return render(request, 'conciliaciones.html', {'form': form})
 
 
+
 def vista_conciliaciones(request):
     if request.method == 'POST':
         form = ExcelFormConciliacion(request.POST, request.FILES)
@@ -53,13 +54,16 @@ def vista_conciliaciones(request):
                 archivo_bancos = request.FILES["archivo_bancos"]
                 archivo_contable = request.FILES["archivo_contable"]
                 querydict = QueryDict(request.POST.urlencode())
+
                 token = querydict.get('csrfmiddlewaretoken')
 
                 if archivo_contable.name == archivo_bancos.name:
                     mensaje = "Los archivos cargados no pueden tener el mismo nombre"
                     return render(request, 'error.html', {'mensaje': mensaje})
 
-                if util.verificar_columnas(archivo_bancos) and util.verificar_columnas(archivo_contable):
+                validacion_extr = util.verificar_columnas(archivo_bancos)
+                validacion_contabl = util.verificar_columnas(archivo_contable)
+                if validacion_extr[0] and validacion_contabl[0]:
                     carpeta_destino = os.getcwd().split('buscador')[0] + '/archivos/'
                     dest_bancos = util.copiar_archivo(archivo_bancos, carpeta_destino, token)
                     dest_contable = util.copiar_archivo(archivo_contable, carpeta_destino, token)
@@ -71,7 +75,15 @@ def vista_conciliaciones(request):
                     return HttpResponseRedirect(url_completa)  # Redirección a la URL completaargs para pasar los pa
                     #return HttpResponseRedirect('/conciliaciones_preparacion')
                 else:
-                    mensaje = "Uno de los dos Archivos no contiene las columnas necesarias"
+
+                    mensaje = " "
+                    if not validacion_extr[0]:
+                        mensaje += validacion_extr[1]
+                        print(validacion_extr[1])
+                    if not validacion_contabl[0]:
+                        mensaje += validacion_contabl[1]
+                        print(validacion_contabl[1])
+
                     context= {'mensaje': mensaje}
                     return render(request, 'error.html', context)
 
