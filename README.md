@@ -1,24 +1,12 @@
-# web-scraping
-
-#Driver
-
-docker pull selenium/standalone-chrome
-
-#correr Driver
-
-docker run -d -p 4444:4444 -p 7900:7900 --shm-size="2g" selenium/standalone-chrome:latest
-
-# correr imagen scraping
-docker run -p 3000:8000 -d scraping_dian
 
 # ejecutar entorno local
 python -m venv mi_entorno
-
 mi_entorno/Scripts/activate
 
 
 
 # ejecucion por archivo de texto .bat
+```código
 @echo off
 
 REM Crear y activar el entorno virtual (opcional pero recomendado)
@@ -26,20 +14,32 @@ python -m venv myenv
 call myenv\Scripts\activate.bat
 
 
-REM Verificar si la carpeta "web-scraping" existe
-if not exist "web-scraping" (
-    REM La carpeta no existe, hacer un git clone
-    git clone https://github.com/prii123/web-scraping.git
+REM Verificar si la carpeta "herramientas-python" existe
+if not exist "herramientas-python" (
+	REM La carpeta no existe, hacer un git clone
+	git clone https://github.com/prii123/herramientas-python.git
 
-    REM Acceder al directorio del proyecto clonado
-    cd web-scraping
+	REM Verificar si el clonado del repositorio fue exitoso
+	if errorlevel 1 (
+		echo Error: No se pudo clonar el repositorio.
+		exit /b 1
+	)
+
+
 ) else (
-    REM La carpeta existe, hacer un git pull
-    cd web-scraping
-    git pull origin main
+	REM La carpeta existe, hacer un git pull
+	cd herramientas-python
+	git pull origin main
+
+	REM Verificar si el git pull fue exitoso
+	if errorlevel 1 (
+		echo Error: No se pudo hacer un git pull del repositorio.
+		exit /b 1
+	)
+
+   
+
 )
-
-
 
 REM Instalar las dependencias
 pip install -r requirements.txt
